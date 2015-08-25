@@ -1,9 +1,11 @@
 package file;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -95,4 +97,42 @@ public class IoUtils {
 		}
 	}
 
+	/**
+	 * 写入文件
+	 * @param log 写入内容
+	 * @param filePath 文件地址
+	 * @param encode 文件编码格式
+	 * @param flag 是否追加 true 换行追加，false覆盖
+	 */
+	@Test
+	public static void writeFile(String log, String filePath, String encode,
+			boolean flag) {
+		try {
+			String s = new String();
+			StringBuffer str = new StringBuffer();
+			File f = new File(filePath);
+			if (f.exists()) {
+				System.out.print("文件存在");
+			} else {
+				System.out.print("文件不存在");
+				f.createNewFile();// 不存在则创建
+			}
+			if (flag) {
+				BufferedReader input = new BufferedReader(new FileReader(f));
+				while ((s = input.readLine()) != null) {
+					str.append(s + "\n");
+				}
+				str.append(log);
+				input.close();
+			} else {
+				str.append(log);
+			}
+			BufferedWriter output = new BufferedWriter(new FileWriter(f));
+			String write = new String(str.toString().getBytes(), encode);
+			output.write(write);
+			output.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
